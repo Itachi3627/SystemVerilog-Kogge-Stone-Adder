@@ -254,7 +254,7 @@ You can simulate this project using any standard SystemVerilog simulator (Vivado
 
 ### 🚀 Quick Start - EDA Playground
 
-Try the live simulation on EDA Playground: **[Run on EDA Playground](https://www.edaplayground.com/x/bFBr)**
+Try the live simulation on EDA Playground: **[Run on EDA Playground](https://www.edaplayground.com/x/cycy)**
 
 ### Local Simulation
 
