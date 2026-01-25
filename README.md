@@ -10,6 +10,89 @@ This repository contains a complete **SystemVerilog verification environment** f
 * **Communication:** Mailboxes for data transaction and Events for synchronization
 * **Coverage:** Functional coverage with cross-coverage of input combinations
 
+## 🔧 Design Under Test (DUT) - Kogge-Stone Adder
+
+### Overview
+
+The **Kogge-Stone Adder** is a parallel prefix adder that performs addition with logarithmic depth, making it one of the fastest adder architectures available. It achieves O(log₂n) delay by computing all intermediate carries in parallel using a tree structure.
+
+### Key Features
+
+* **Parameterizable Width:** Configurable WIDTH parameter (default: 16 bits)
+* **Logarithmic Delay:** Number of stages = log₂(WIDTH) = 4 stages for 16-bit
+* **Parallel Prefix Architecture:** Uses Generate (G) and Propagate (P) signals
+* **Carry-in Support:** Incorporates carry-in at bit position 0
+* **Optimal Performance:** Trades area for speed - more hardware but faster than ripple-carry adders
+
+### Algorithm Stages
+
+#### Stage 0: Initialization
+Computes initial Propagate and Generate signals for each bit:
+```
+P[0][i] = A[i] XOR B[i]     // Propagate
+G[0][i] = A[i] AND B[i]      // Generate
+G[0][0] = A[0] AND B[0] OR (cin AND (A[0] XOR B[0]))  // Include carry-in
+```
+
+#### Stages 1 to log₂(WIDTH): Prefix Tree
+Each stage combines signals at increasing distances (1, 2, 4, 8...):
+```
+Distance = 2^(stage-1)
+For bit i >= distance:
+    P[stage][i] = P[stage-1][i] AND P[stage-1][i-distance]
+    G[stage][i] = G[stage-1][i] OR (P[stage-1][i] AND G[stage-1][i-distance])
+```
+
+#### Final Stage: Sum Computation
+```
+sum[0] = P[0][0] XOR cin
+sum[i] = P[0][i] XOR G[final_stage][i-1]  // for i > 0
+cout = G[final_stage][WIDTH-1]
+```
+
+### Module Interface
+
+```systemverilog
+module kogge_stone_adder #(
+    parameter WIDTH = 16
+) (
+    input  logic [WIDTH-1:0] A,      // First operand
+    input  logic [WIDTH-1:0] B,      // Second operand
+    input  logic             cin,    // Carry input
+    output logic [WIDTH-1:0] sum,    // Sum output
+    output logic             cout    // Carry output
+);
+```
+
+### Performance Characteristics
+
+| Characteristic | Value (16-bit) |
+|---------------|----------------|
+| Number of Stages | 4 (log₂16) |
+| Critical Path Delay | O(log n) |
+| Area Complexity | O(n log n) |
+| Advantage | Fastest parallel adder |
+| Trade-off | Higher area vs ripple-carry |
+
+### Example Operation
+
+For a 16-bit addition: A=0x1234 + B=0x5678 + cin=1
+1. **Stage 0:** Initialize 16 P and G signals
+2. **Stage 1:** Combine at distance 1 (adjacent bits)
+3. **Stage 2:** Combine at distance 2 (skip 1 bit)
+4. **Stage 3:** Combine at distance 4 (skip 3 bits)
+5. **Stage 4:** Combine at distance 8 (skip 7 bits)
+6. **Output:** sum=0x68AD, cout=0
+
+### Why Verify This Design?
+
+The Kogge-Stone adder's complexity comes from:
+- Multiple parallel computation stages
+- Correct propagate/generate signal combinations
+- Proper carry-in integration
+- Edge cases at different bit positions
+- Verification ensures all corner cases work correctly across the logarithmic tree structure
+
 ## 🏗️ Testbench Architecture
 
 The testbench is organized into a modular environment where components communicate via **mailboxes** and **interfaces**.
