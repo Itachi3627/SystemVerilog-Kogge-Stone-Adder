@@ -22,7 +22,7 @@ class coverage;
             bins max = {16'hFFFF};
         }
         cp_cin: coverpoint trans.cin {
-            bins ci = {1'b1}; // Check if Greater Than flag was asserted
+            bins ci = {1'b1}; 
         }
 
         cp_sum: coverpoint trans.sum {
@@ -34,7 +34,7 @@ class coverage;
         }
 
         cp_cout: coverpoint trans.cout {
-            bins taken = {1'b1}; // Check if Greater Than flag was asserted
+            bins taken = {1'b1}; 
         }
         
         cross_A_B_cin: cross cp_A,cp_B,cp_cin;
