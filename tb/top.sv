@@ -19,14 +19,20 @@ module tb;
     $display("Starting Kogge Stone Adder Testbench");
     $display("===========================================");
     
-      env = new(intff, 20); // Create environment with 20 transactions
+    env = new(intff, 20); // Create environment with 20 transactions
     env.run();
     
     $display("===========================================");
     $display("Testbench Complete");
     $display("===========================================");
     $finish;
-  end
+    end
+
+
+    initial begin
+        $dumpfile("waveform.vcd");
+        $dumpvars(0, tb);
+    end
   
 
 endmodule
