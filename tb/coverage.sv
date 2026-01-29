@@ -50,10 +50,10 @@ class coverage;
    task run();
       $display("[COVERAGE] Starting coverage sampling");
         forever begin
-            mon2cov.get(trans);      // Get transaction from Monitor
-            cg_kogge_stone_adder.sample();  // Sample the covergroup
+            mon2cov.get(trans);      
+            cg_kogge_stone_adder.sample();  
             
-            // Optional: Print current coverage % to console for debugging
+            
             $display("[COVERAGE] Current Coverage: %.2f%%", cg_kogge_stone_adder.get_inst_coverage());
         end
     endtask

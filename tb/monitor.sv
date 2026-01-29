@@ -7,7 +7,7 @@ class monitor;
     function new(virtual intf.monitor vif, mailbox #(transaction) m2s, mailbox #(transaction) m2c);
         this.vif = vif;
         this.mon2scb = m2s;
-        this.mon2cov = m2c; // [New]
+        this.mon2cov = m2c;
     endfunction
 
     task run();

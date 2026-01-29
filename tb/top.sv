@@ -19,7 +19,7 @@ module tb;
     $display("Starting Kogge Stone Adder Testbench");
     $display("===========================================");
     
-    env = new(intff, 20); // Create environment with 20 transactions
+    env = new(intff, 200); 
     env.run();
     
     $display("===========================================");
