@@ -22,7 +22,8 @@ class coverage;
             bins max = {16'hFFFF};
         }
         cp_cin: coverpoint trans.cin {
-            bins ci = {1'b1}; 
+            bins low = {1'b0}; 
+            bins high = {1'b1}; 
         }
 
         cp_sum: coverpoint trans.sum {

@@ -1,1 +1,0 @@
-xrun -Q -unbuffered -timescale 1ns/1ns -sysv -access +rw -coverage all -covoverwrite design.sv testbench.sv
