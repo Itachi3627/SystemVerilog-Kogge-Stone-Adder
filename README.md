@@ -4,7 +4,7 @@ This repository contains a complete **SystemVerilog verification environment** f
 
 ## 📌 Project Overview
 
-* **Design Under Test (DUT):** 16-bit Kogge-Stone Adder (Parallel Prefix Adder)
+* **Design Under Test (DUT):** 16-bit Kogge-Stone Adder (Parallel Prefix Adder) - **Designed by me**
 * **Verification Methodology:** SystemVerilog OOP (Object Oriented Programming)
 * **Architecture:** Layered Testbench (Generator, Driver, Monitor, Scoreboard, Coverage)
 * **Communication:** Mailboxes for data transaction and Events for synchronization
