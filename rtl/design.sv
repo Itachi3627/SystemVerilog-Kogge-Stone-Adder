@@ -12,39 +12,33 @@ module kogge_stone_adder #(
     
     logic [WIDTH-1:0] P [0:STAGES];
     logic [WIDTH-1:0] G [0:STAGES];
-    
+
     always_comb begin
+        // Stage 0: Initialize P and G
         for (int i = 0; i < WIDTH; i++) begin
-            P[0][i] = A[i] ^ B[i];  
+            P[0][i] = A[i] ^ B[i];
             if (i == 0) begin
-                
                 G[0][i] = A[i] & B[i] | (cin & (A[i] ^ B[i]));
             end else begin
-                G[0][i] = A[i] & B[i];  
+                G[0][i] = A[i] & B[i];
             end
         end
-    end
-    
-    genvar s, i;
-    generate
-        for (s = 1; s <= STAGES; s++) begin : gen_STAGES
-            localparam int DISTANCE = 1 << (s - 1);
-            
-            for (i = 0; i < WIDTH; i++) begin : gen_bits
-                always_comb begin
-                    if (i >= DISTANCE) begin
-                        P[s][i] = P[s-1][i] & P[s-1][i - DISTANCE];
-                        G[s][i] = G[s-1][i] | (P[s-1][i] & G[s-1][i - DISTANCE]);
-                    end else begin
-                        P[s][i] = P[s-1][i];
-                        G[s][i] = G[s-1][i];
-                    end
+        
+        // Stages 1 to STAGES: Kogge-Stone prefix tree
+        for (int s = 1; s <= STAGES; s++) begin
+            automatic int DISTANCE = 1 << (s - 1);
+            for (int i = 0; i < WIDTH; i++) begin
+                if (i >= DISTANCE) begin
+                    P[s][i] = P[s-1][i] & P[s-1][i - DISTANCE];
+                    G[s][i] = G[s-1][i] | (P[s-1][i] & G[s-1][i - DISTANCE]);
+                end else begin
+                    P[s][i] = P[s-1][i];
+                    G[s][i] = G[s-1][i];
                 end
             end
         end
-    endgenerate
-    
-    always_comb begin
+        
+        // Final sum calculation
         for (int i = 0; i < WIDTH; i++) begin
             if (i == 0) begin
                 sum[i] = P[0][i] ^ cin;
@@ -56,4 +50,4 @@ module kogge_stone_adder #(
         cout = G[STAGES][WIDTH-1];
     end
 
-endmodule 
+endmodule
